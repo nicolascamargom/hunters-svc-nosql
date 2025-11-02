@@ -1,0 +1,179 @@
+openapi: 3.0.0
+info:
+  title: API NoSQL - Hunter x Hunter (MongoDB)
+  version: 1.0.0
+  description: >-
+    CRUD de hunters almacenados en MongoDB Atlas.
+    Campos: _id (ObjectId), nombre, edad, altura, peso, imageUrl.
+servers:
+  - url: http://localhost:8081
+    description: Servidor local (NoSQL)
+
+tags:
+  - name: Hunters
+    description: CRUD sobre hunters en MongoDB Atlas
+
+paths:
+  /api/hunters:
+    get:
+      tags: [Hunters]
+      summary: Obtener todos los hunters
+      responses:
+        "200":
+          description: Lista de hunters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Hunter"
+              example:
+                - _id: "65c0f9f987a3c45d1b22ab21"
+                  nombre: "Netero"
+                  edad: 120
+                  altura: 168
+                  peso: 57
+                  imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9t_tzdqBHGq4mDc477f9jvQbOfcs2T8jI0A&s"
+                - _id: "65c0f9f987a3c45d1b22ab22"
+                  nombre: "Biscuit Krueger"
+                  edad: 50
+                  altura: 145
+                  peso: 50
+                  imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7JfAr6gNIfDhSDwaZsWKbMBnzEAE3a7fb4w&s"
+    post:
+      tags: [Hunters]
+      summary: Crear un hunter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HunterInput"
+      responses:
+        "201":
+          description: Hunter creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hunter"
+        "400":
+          description: Datos inválidos
+          content:
+            application/json:
+              example: { "error": "imageUrl es obligatorio" }
+
+  /api/hunters/{id}:
+    get:
+      tags: [Hunters]
+      summary: Obtener hunter por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "65c0f9f987a3c45d1b22ab21"
+      responses:
+        "200":
+          description: Hunter encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hunter"
+        "404":
+          description: Hunter no encontrado
+          content:
+            application/json:
+              example: { "error": "Hunter no encontrado" }
+    put:
+      tags: [Hunters]
+      summary: Actualizar hunter por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "65c0f9f987a3c45d1b22ab21"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HunterInput"
+      responses:
+        "200":
+          description: Hunter actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hunter"
+        "404":
+          description: Hunter no encontrado
+    delete:
+      tags: [Hunters]
+      summary: Eliminar hunter por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "65c0f9f987a3c45d1b22ab21"
+      responses:
+        "200":
+          description: Hunter eliminado
+          content:
+            application/json:
+              example: { "message": "Hunter eliminado correctamente" }
+        "404":
+          description: Hunter no encontrado
+
+components:
+  schemas:
+    Hunter:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 65c0f9f987a3c45d1b22ab21
+        nombre:
+          type: string
+          example: Meruem
+        edad:
+          type: integer
+          example: 1
+        altura:
+          type: integer
+          example: 200
+        peso:
+          type: integer
+          example: 120
+        imageUrl:
+          type: string
+          example: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTntm-O58P6v27-H-EJt0CH1INf5neTbHOrjg&s
+
+    HunterInput:
+      type: object
+      required:
+        - nombre
+        - edad
+        - altura
+        - peso
+        - imageUrl
+      properties:
+        nombre:
+          type: string
+          example: Netero
+        edad:
+          type: integer
+          example: 120
+        altura:
+          type: integer
+          example: 168
+        peso:
+          type: integer
+          example: 57
+        imageUrl:
+          type: string
+          example: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9t_tzdqBHGq4mDc477f9jvQbOfcs2T8jI0A&s
