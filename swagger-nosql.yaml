@@ -2,16 +2,18 @@ openapi: 3.0.0
 info:
   title: API NoSQL - Hunter x Hunter (MongoDB)
   version: 1.0.0
-  description: >-
-    CRUD de hunters almacenados en MongoDB Atlas.
-    Campos: _id (ObjectId), nombre, edad, altura, peso, imageUrl.
+  description: >
+    API REST desplegada en Render para la gestión de Hunters en MongoDB Atlas.
+    Permite realizar operaciones CRUD (crear, leer, actualizar y eliminar)
+    sobre la colección de Hunters. Desarrollado con Node.js, Express y Mongoose.
+
 servers:
-  - url: http://localhost:8081
-    description: Servidor local (NoSQL)
+  - url: https://hunterxhunter.onrender.com
+    description: Servidor en la nube (Render - Producción)
 
 tags:
   - name: Hunters
-    description: CRUD sobre hunters en MongoDB Atlas
+    description: Endpoints para gestionar Hunters almacenados en MongoDB Atlas
 
 paths:
   /api/hunters:
@@ -42,7 +44,7 @@ paths:
                   imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7JfAr6gNIfDhSDwaZsWKbMBnzEAE3a7fb4w&s"
     post:
       tags: [Hunters]
-      summary: Crear un hunter
+      summary: Crear un nuevo hunter
       requestBody:
         required: true
         content:
@@ -51,7 +53,7 @@ paths:
               $ref: "#/components/schemas/HunterInput"
       responses:
         "201":
-          description: Hunter creado
+          description: Hunter creado exitosamente
           content:
             application/json:
               schema:
@@ -65,7 +67,7 @@ paths:
   /api/hunters/{id}:
     get:
       tags: [Hunters]
-      summary: Obtener hunter por ID
+      summary: Obtener un hunter por su ID
       parameters:
         - name: id
           in: path
@@ -85,9 +87,10 @@ paths:
           content:
             application/json:
               example: { "error": "Hunter no encontrado" }
+
     put:
       tags: [Hunters]
-      summary: Actualizar hunter por ID
+      summary: Actualizar un hunter por su ID
       parameters:
         - name: id
           in: path
@@ -103,16 +106,17 @@ paths:
               $ref: "#/components/schemas/HunterInput"
       responses:
         "200":
-          description: Hunter actualizado
+          description: Hunter actualizado correctamente
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Hunter"
         "404":
           description: Hunter no encontrado
+
     delete:
       tags: [Hunters]
-      summary: Eliminar hunter por ID
+      summary: Eliminar un hunter por su ID
       parameters:
         - name: id
           in: path
@@ -122,12 +126,15 @@ paths:
             example: "65c0f9f987a3c45d1b22ab21"
       responses:
         "200":
-          description: Hunter eliminado
+          description: Hunter eliminado correctamente
           content:
             application/json:
               example: { "message": "Hunter eliminado correctamente" }
         "404":
           description: Hunter no encontrado
+          content:
+            application/json:
+              example: { "error": "Hunter no encontrado" }
 
 components:
   schemas:
